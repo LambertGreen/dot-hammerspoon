@@ -1,6 +1,4 @@
-#+TITLE: README
-
-A =Hammerspoon= configuration.
+#+TITLE: A =Hammerspoon= configuration.
 
 * HyperMode
 An alternative to using a =HyperKey=. Inspired by =Doom Emacs=/=Spacemacs= keybinds.
