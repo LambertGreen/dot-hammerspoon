@@ -9,5 +9,8 @@ This script helps facilitate using the =Capslock= key as combo key i.e. =Control
 * Brackets
 Brackets are hard to type without ever making errors, so why not use those large =Shift= keys. Tapping =LShift= will output ~[~ and tapping =RShift= will output ~]~.
 
+* AppSwitcher
+This is secondary application switcher that is bound to ~alt-tab~ for use inside a remote session.
+
 * TODOs
 ** TODO Update README with sections for other scripts

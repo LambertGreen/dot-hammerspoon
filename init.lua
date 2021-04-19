@@ -10,6 +10,7 @@ require('ShiftToBrackets')
 -- TODO Add keybinding in HyperMode for ShowKeys functionality
 require('ShowKeys')
 require('AppWatcher')
+require('AppSwitcher')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")
