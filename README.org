@@ -1,0 +1,15 @@
+#+TITLE: README
+
+A =Hammerspoon= configuration.
+
+* HyperMode
+An alternative to using a =HyperKey=. Inspired by =Doom Emacs=/=Spacemacs= keybinds.
+
+* ControlTapToEscape
+This script helps facilitate using the =Capslock= key as combo key i.e. =Control= when used with another key, else =Escape= if tapped. It is expected that the system keyboard configuration option is used to rebind =Capslock= to =Control=.
+
+* Brackets
+Brackets are hard to type without ever making errors, so why not use those large =Shift= keys. Tapping =LShift= will output ~[~ and tapping =RShift= will output ~]~.
+
+* TODOs
+** TODO Update README with sections for other scripts
