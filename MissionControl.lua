@@ -6,6 +6,9 @@
 local obj = {}
 
 local hyperMod = {'ctrl', 'shift', 'alt', 'cmd'}
+
+-- Note: simply using 'ctrl+left' was not working and the below workaround was found:
+-- https://github.com/Hammerspoon/hammerspoon/issues/1946
 local missionControlDefaultMod = {'fn', 'ctrl'}
 
 obj.toggleNotificationCenter = function() hs.eventtap.keyStroke(hyperMod, 'n') end
