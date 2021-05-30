@@ -7,7 +7,7 @@ key = spoon.RecursiveBinder.singleKey
 local wm = require('WindowManagement')
 local mouse = require('MousePointer')
 local app = require('Application')
-local notic = require('NotificationCenter')
+local mc = require('MissionControl')
 
 local hyperMod = {'ctrl', 'command'}
 local hyperKey = 'Space'
@@ -29,9 +29,13 @@ hsConsole[key("o", "open")] = hs.openConsole
 hsConsole[key("c", "close")] = hs.closeConsole
 -- hsConsole[key("t", "toggle OnTop")] = hs.consoleOnTop
 
-notificationCenter = {}
-notificationCenter[key("o", "open")] = notic.toggleNotificationCenter
-notificationCenter[key("d", "toggle dnd")] = notic.toggleDoNotDisturb
+missionControl = {}
+missionControl[key("n", "toggle-notifications")] = mc.toggleNotificationCenter
+missionControl[key("d", "toggle-dnd")] = mc.toggleDoNotDisturb
+missionControl[key("k", "show-mission-control")] = mc.showMissionControl
+missionControl[key("j", "show-applications")] = mc.showApplications
+missionControl[key("h", "left-space")] = mc.moveLeftSpace
+missionControl[key("l", "right-space")] = mc.moveRightSpace
 
 hyper = {}
 hyper[key("w", "manage windows")] = windowMove
@@ -39,6 +43,6 @@ hyper[key("s", "switcher")] = hs.hints.windowHints
 hyper[key("q", "kill app")] = app.appKill9
 hyper[key("p", "move mouse")] = mouse.movePointerToOtherScreen
 hyper[key("c", "console")] = hsConsole
-hyper[key("n", "notifications")] = notificationCenter
+hyper[key("m", "mission-control")] = missionControl
 
 hs.hotkey.bind(hyperMod, hyperKey, spoon.RecursiveBinder.recursiveBind(hyper))
