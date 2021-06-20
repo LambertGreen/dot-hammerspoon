@@ -24,7 +24,7 @@ empty = function(t)
 end
 
 -- Setup a excluded application filter
-exclusion = hs.window.filter.new{'Remotix', 'VirtualBox VM'}
+exclusion = hs.window.filter.new{'Remotix', 'VirtualBox VM', 'Screen Sharing'}
 exclusion:subscribe(hs.window.filter.windowFocused,
     function()
         ctrl_to_escape_modifier_tap:stop()
