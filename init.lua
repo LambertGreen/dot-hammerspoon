@@ -10,6 +10,7 @@ require('ControlTapToEscape')
 require('ShowKeys')
 require('AppWatcher')
 require('AppSwitcher')
+require('Readline')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")
