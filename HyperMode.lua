@@ -27,7 +27,7 @@ windowMove[key("f", "maximize")] = wm.moveWindowMaximize
 hsConsole = {}
 hsConsole[key("o", "open")] = hs.openConsole
 hsConsole[key("c", "close")] = hs.closeConsole
--- hsConsole[key("t", "toggle OnTop")] = hs.consoleOnTop
+hsConsole[key("t", "toggle OnTop")] = function() hs.consoleOnTop(not hs.consoleOnTop()) end
 
 missionControl = {}
 missionControl[key("n", "toggle-notifications")] = mc.toggleNotificationCenter
