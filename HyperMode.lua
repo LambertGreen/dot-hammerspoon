@@ -27,7 +27,7 @@ windowMove[key("f", "maximize")] = wm.moveWindowMaximize
 hsConsole = {}
 hsConsole[key("o", "open")] = hs.openConsole
 hsConsole[key("c", "close")] = hs.closeConsole
--- hsConsole[key("t", "toggle OnTop")] = hs.consoleOnTop
+hsConsole[key("t", "toggle OnTop")] = function() hs.consoleOnTop(not hs.consoleOnTop()) end
 
 missionControl = {}
 missionControl[key("n", "toggle-notifications")] = mc.toggleNotificationCenter
@@ -36,6 +36,8 @@ missionControl[key("k", "show-mission-control")] = mc.showMissionControl
 missionControl[key("j", "show-applications")] = mc.showApplications
 missionControl[key("h", "left-space")] = mc.moveLeftSpace
 missionControl[key("l", "right-space")] = mc.moveRightSpace
+missionControl[key("c", "close-notification")] = function()
+  hs.osascript.applescriptFromFile("NotificationClose.applescript") end
 
 hyper = {}
 hyper[key("w", "manage windows")] = windowMove
