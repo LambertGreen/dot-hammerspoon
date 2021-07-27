@@ -1,6 +1,7 @@
 -- Implements a Hyper modal mode
 --
 
+spoon.SpoonInstall:andUse("RecursiveBinder")
 hs.loadSpoon("RecursiveBinder")
 key = spoon.RecursiveBinder.singleKey
 

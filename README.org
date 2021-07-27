@@ -1,15 +1,40 @@
 #+TITLE: A =Hammerspoon= configuration.
 
-* HyperMode
+* Introduction
+This is my =Hammerspoon= configuration repository.
+
+* Setup
+** Install =Hammerspoon= using =Homebrew=
+#+begin_src sh
+brew install hammerspoon
+#+end_src
+
+** Install =SpoonInstall= to bootstrap installation of other spoons
+Once =SpoonInstall= is installed, other spoons will be automatically installed via ~init.lua~
+
+#+begin_src sh :var repodir=(file-name-directory (buffer-file-name))
+cd $repodir
+wget "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/SpoonInstall.spoon.zip"
+unzip SpoonInstall.spoon.zip -d ./Spoons
+rm SpoonInstall.spoon.zip
+#+end_src
+
+#+RESULTS:
+| Archive:   | SpoonInstall.spoon.zip                |
+| creating:  | ./Spoons/SpoonInstall.spoon/          |
+| inflating: | ./Spoons/SpoonInstall.spoon/init.lua  |
+| inflating: | ./Spoons/SpoonInstall.spoon/docs.json |
+* My modules
+** HyperMode
 An alternative to using a =HyperKey=. Inspired by =Doom Emacs=/=Spacemacs= keybinds.
 
-* ControlTapToEscape
+** ControlTapToEscape
 This script helps facilitate using the =Capslock= key as combo key i.e. =Control= when used with another key, else =Escape= if tapped. It is expected that the system keyboard configuration option is used to rebind =Capslock= to =Control=.
 
-* Brackets
+** Brackets
 Brackets are hard to type without ever making errors, so why not use those large =Shift= keys. Tapping =LShift= will output ~[~ and tapping =RShift= will output ~]~.
 
-* AppSwitcher
+** AppSwitcher
 This is secondary application switcher that is bound to ~alt-tab~ for use inside a remote session.
 
 * TODOs

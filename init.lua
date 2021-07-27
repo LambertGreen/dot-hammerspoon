@@ -3,6 +3,10 @@
 -- Set the global log level
 hs.logger.defaultLogLevel = "info"
 
+-- Install Spoons with SpoonInstall
+hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.use_syncinstall = true
+
 require('HyperMode')
 require('ConfigWatcher')
 require('ControlTapToEscape')
