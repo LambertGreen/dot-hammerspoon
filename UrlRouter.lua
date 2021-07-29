@@ -1,26 +1,39 @@
--- Below information on installed Chrome obtained from navigating to 'chrome://version'
+-- Route the opening of URLs to a specific Google Chrome profile
 --
--- Executable Path /Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta
--- Profile Path /Users/lambert.green/Library/Application Support/Google/Chrome Beta/Profile 2
+-- Profile information is obtained from navigating to 'chrome://version'
 
-function appID(app)
-  return hs.application.infoForBundlePath(app)['CFBundleIdentifier']
-end
+ChromeApp = "/Applications/Google Chrome Beta.app"
+ChromeAppExe = ChromeApp.."/Contents/MacOS/Google Chrome Beta"
+ChromeDataDir = "~/Library/Application Support/Google/Chrome Beta/"
+ChromeBrowserAppId = hs.application.infoForBundlePath(ChromeApp)['CFBundleIdentifier']
 
-chromeBrowser = appID('/Applications/Google Chrome Beta.app')
+-- local log = require("hs.logger").new("UrlRouter")
 
--- open Chrome with a specific named Profile
-function chromeWithProfile(profile, url)
+function OpenChromeWithProfile(profile, url)
   local t = hs.task.new(
-    "/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta",
-    nil,
-    function() return false end,
-    {"--profile-directory=/Users/lambert.green/Library/Application Support/Google/Chrome Beta/" .. profile, url})
+    ChromeAppExe,
+    function(exitCode, stdOut, stdErr)
+      -- log.df("exitCode: %s", exitCode)
+      -- log.df("stdOut: %s", stdOut)
+      -- log.df("stdErr: %s", stdErr)
+    end,
+    function(task, stdOut, stdErr)
+      -- log.df("task: %s", task)
+      -- log.df("stdOut: %s", stdOut)
+      -- log.df("stdErr: %s", stdErr)
+      return true
+    end,
+    {profile, url})
   t:start()
 end
 
-chromeWorkProfile = hs.fnutils.partial(chromeWithProfile, "Profile 2")
-chromePersonalProfile = hs.fnutils.partial(chromeWithProfile, "Default")
+-- TODO This routing is not working with the issue being the profile part
+-- I think it would work just fine if we are using two different browsers.
+-- Things may appear to be working, but what is actually happening is the Chrome will
+-- reuse the profile that was last used.
+--
+chromePersonalProfile = hs.fnutils.partial(OpenChromeWithProfile, "--user-profile="..ChromeDataDir.."Default")
+chromeWorkProfile = hs.fnutils.partial(OpenChromeWithProfile, "--user-profile="..ChromeDataDir.."Profile 2")
 
 spoon.SpoonInstall:andUse(
   "URLDispatcher", {
@@ -29,8 +42,12 @@ spoon.SpoonInstall:andUse(
         { "https?://.*tableau%.com", nil, chromeWorkProfile },
         { "https?://.*tsi%.lan", nil, chromeWorkProfile },
         { "https?://.*salesforce%.com", nil, chromeWorkProfile },
+        { "https?://.*reddit%.com", nil, chromePersonalProfile },
+        { "https?://.*github%.com", nil, chromePersonalProfile },
       },
-      default_handler = chromeBrowser
+      default_handler = ChromeBrowserAppId,
     },
     start = true,
 })
+
+-- spoon.URLDispatcher.logger.defaultLogLevel = "debug"
