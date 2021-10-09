@@ -7,5 +7,7 @@ function applicationWatcherCallback(appName, eventType, appObject)
     log.i(appName)
 end
 
-watcher = hs.application.watcher.new(applicationWatcherCallback)
-watcher:start()
+
+-- We do not need the AppWatcher running all the time so commenting it out for now.
+-- watcher = hs.application.watcher.new(applicationWatcherCallback)
+-- watcher:start()
