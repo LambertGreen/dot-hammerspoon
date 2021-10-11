@@ -15,12 +15,14 @@ require('ShowKeys')
 require('AppWatcher')
 require('AppSwitcher')
 require('Readline')
-require('UrlRouter')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")
 
 -- Disabled packages
+--
+-- Hammersoon is no longer working with good performance as the registered browser
+-- require('UrlRouter')
 --
 -- No longer using ShiftToBrackets because it is better to learn to touch type the brackets after all.
 -- An issue with using it, was that often times I pressed Shift by mistake which resulted in spurious
