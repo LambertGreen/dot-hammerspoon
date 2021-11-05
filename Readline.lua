@@ -10,7 +10,8 @@ hs.window.filter.new{'Alfred', 'Contexts'}
 
 modal:bind({'ctrl'}, 'u', function()
     hs.eventtap.keyStroke({'ctrl'}, 'a')
-    hs.timer.usleep(200)
+    hs.timer.usleep(50)
     hs.eventtap.keyStroke({'ctrl'}, 'k')
 end)
 
+return modal
