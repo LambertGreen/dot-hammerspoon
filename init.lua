@@ -15,6 +15,7 @@ require('ShowKeys')
 require('AppWatcher')
 require('AppSwitcher')
 require('Readline')
+require('Control_NP_To_UpDown')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")
