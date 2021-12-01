@@ -4,9 +4,12 @@
 --
 -- From: https://gist.github.com/zcmarine/f65182fe26b029900792fa0b59f09d7f
 
-local log = hs.logger.new('CtrlToEscape')
+local log = hs.logger.new('CtrlToEscape', 'debug')
 local send_escape = false
 local prev_modifiers = {}
+local obj = {}
+local is_enabled = false
+app = nil
 
 len = function(t)
     local length = 0
@@ -24,18 +27,18 @@ empty = function(t)
 end
 
 -- Setup a excluded application filter
-exclusion = hs.window.filter.new{'Remotix', 'VirtualBox VM', 'Screen Sharing', 'UTM'}
-exclusion:subscribe(hs.window.filter.windowFocused,
-    function()
-        ctrl_to_escape_modifier_tap:stop()
-        ctrl_to_escape_non_modifier_tap:stop()
-        send_escape = false
-    end)
-exclusion:subscribe(hs.window.filter.windowUnfocused,
-    function()
-        ctrl_to_escape_modifier_tap:start()
-        ctrl_to_escape_non_modifier_tap:start()
-    end)
+exclusion = hs.window.filter.new{
+    'VirtualBox VM',
+    'Screen Sharing',
+    'NoMachine',
+    -- 'NoMachine Monitor',
+    -- 'QuickLookUIService',
+    -- 'ndock',
+    -- 'nxplayer',
+    'Remotix',
+}
+
+exclusion:setAppFilter('NoMachine', {allowTitles=1})
 
 -- On ctrl down check if we should convert to an escape
 ctrl_to_escape_modifier_tap = hs.eventtap.new(
@@ -68,5 +71,53 @@ ctrl_to_escape_non_modifier_tap = hs.eventtap.new(
     end
 )
 
-ctrl_to_escape_modifier_tap:start()
-ctrl_to_escape_non_modifier_tap:start()
+enable = function()
+    ctrl_to_escape_modifier_tap:start()
+    ctrl_to_escape_non_modifier_tap:start()
+    is_enabled = true
+    log.d("ControlToEscape: enabled")
+end
+
+disable = function()
+    ctrl_to_escape_modifier_tap:stop()
+    ctrl_to_escape_non_modifier_tap:stop()
+    is_enabled = false
+    send_escape = false
+    log.d("ControlToEscape: disabled")
+end
+
+exclusion:subscribe(hs.window.filter.windowFocused,
+    function()
+        -- if app and app:name() == "NoMachine" then
+        --     log.d(app)
+        --     app = nil
+        -- else
+            app = hs.application.frontmostApplication()
+            log.d(app)
+            disable()
+        -- end
+    end)
+
+exclusion:subscribe(hs.window.filter.windowUnfocused,
+    function()
+        -- if app and app:name() == "NoMachine" then
+        --     log.d(app)
+        --     app = nil
+        -- else
+            -- app = hs.application.frontmostApplication()
+            log.d(app)
+            enable()
+        -- end
+    end)
+
+enable()
+
+obj.toggle = function()
+    if is_enabled then
+        disable()
+    else
+        enable()
+    end
+end
+
+return obj
