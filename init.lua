@@ -7,9 +7,9 @@ hs.logger.defaultLogLevel = "info"
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 
+controlToEscape = require('ControlTapToEscape')
 require('HyperMode')
 require('ConfigWatcher')
-require('ControlTapToEscape')
 -- TODO Add keybinding in HyperMode for ShowKeys functionality
 require('ShowKeys')
 require('AppWatcher')
