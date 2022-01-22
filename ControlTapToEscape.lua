@@ -7,8 +7,8 @@
 local log = hs.logger.new('CtrlToEscape', 'debug')
 local send_escape = false
 local prev_modifiers = {}
-local obj = {}
 local is_enabled = false
+local obj = {}
 
 len = function(t)
     local length = 0
@@ -23,6 +23,54 @@ empty = function(t)
         return true
     end
     return false
+end
+
+on_control_down = function(evt)
+    -- On ctrl down check if we should convert to an escape
+    local curr_modifiers = evt:getFlags()
+
+    if curr_modifiers["ctrl"] and len(curr_modifiers) == 1 and empty(prev_modifiers) then
+        send_escape = true
+    elseif send_escape and prev_modifiers["ctrl"] and empty(curr_modifiers) then
+        hs.eventtap.event.newKeyEvent({}, 'escape', true):post()
+        hs.eventtap.event.newKeyEvent({}, 'escape', false):post()
+        send_escape = false
+        log.d('Control tapped: sent escape key.')
+    else
+        send_escape = false
+    end
+
+    prev_modifiers = curr_modifiers
+    return true
+end
+
+on_non_modifier_down = function(evt)
+    -- If any non-modifier key is pressed, we know we won't be sending an escape
+    send_escape = false
+    return false
+end
+
+enable = function()
+    ctrl_to_escape_modifier_tap:start()
+    ctrl_to_escape_non_modifier_tap:start()
+    is_enabled = true
+    log.d("ControlToEscape: enabled")
+end
+
+disable = function()
+    ctrl_to_escape_modifier_tap:stop()
+    ctrl_to_escape_non_modifier_tap:stop()
+    is_enabled = false
+    send_escape = false
+    log.d("ControlToEscape: disabled")
+end
+
+obj.toggle = function()
+    if is_enabled then
+        disable()
+    else
+        enable()
+    end
 end
 
 -- Setup a excluded application filter
@@ -43,62 +91,13 @@ exclusion = hs.window.filter.new{
 
 exclusion:setAppFilter('NoMachine', {allowTitles=1})
 
--- On ctrl down check if we should convert to an escape
-ctrl_to_escape_modifier_tap = hs.eventtap.new(
-    {hs.eventtap.event.types.flagsChanged},
-    function(evt)
-        local curr_modifiers = evt:getFlags()
-
-        if curr_modifiers["ctrl"] and len(curr_modifiers) == 1 and empty(prev_modifiers) then
-            send_escape = true
-        elseif send_escape and prev_modifiers["ctrl"] and empty(curr_modifiers) then
-            hs.eventtap.event.newKeyEvent({}, 'escape', true):post()
-            hs.eventtap.event.newKeyEvent({}, 'escape', false):post()
-            send_escape = false
-            log.d('Control tapped: sent escape key.')
-        else
-            send_escape = false
-        end
-
-        prev_modifiers = curr_modifiers
-        return true
-    end
-)
-
--- If any non-modifier key is pressed, we know we won't be sending an escape
-ctrl_to_escape_non_modifier_tap = hs.eventtap.new(
-    {hs.eventtap.event.types.keyDown},
-    function(evt)
-        send_escape = false
-        return false
-    end
-)
-
-enable = function()
-    ctrl_to_escape_modifier_tap:start()
-    ctrl_to_escape_non_modifier_tap:start()
-    is_enabled = true
-    log.d("ControlToEscape: enabled")
-end
-disable = function()
-    ctrl_to_escape_modifier_tap:stop()
-    ctrl_to_escape_non_modifier_tap:stop()
-    is_enabled = false
-    send_escape = false
-    log.d("ControlToEscape: disabled")
-end
+ctrl_to_escape_modifier_tap = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, on_control_down)
+ctrl_to_escape_non_modifier_tap = hs.eventtap.new({hs.eventtap.event.types.keyDown}, on_non_modifier_down)
 
 exclusion:subscribe(hs.window.filter.windowFocused, disable)
 exclusion:subscribe(hs.window.filter.windowUnfocused, enable)
 
+-- Enable by default
 enable()
-
-obj.toggle = function()
-    if is_enabled then
-        disable()
-    else
-        enable()
-    end
-end
 
 return obj
