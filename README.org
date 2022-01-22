@@ -1,4 +1,4 @@
-#+TITLE: A =Hammerspoon= configuration.
+#+TITLE: A Hammerspoon configuration.
 
 * Introduction
 This is my =Hammerspoon= configuration repository.
@@ -25,16 +25,16 @@ rm SpoonInstall.spoon.zip
 | inflating: | ./Spoons/SpoonInstall.spoon/init.lua  |
 | inflating: | ./Spoons/SpoonInstall.spoon/docs.json |
 * My modules
-** HyperMode
+** =HyperMode=
 An alternative to using a =HyperKey=. Inspired by =Doom Emacs=/=Spacemacs= keybinds.
 
-** ControlTapToEscape
+** =ControlTapToEscape=
 This script helps facilitate using the =Capslock= key as combo key i.e. =Control= when used with another key, else =Escape= if tapped. It is expected that the system keyboard configuration option is used to rebind =Capslock= to =Control=.
 
-** Brackets
+** =Brackets=
 Brackets are hard to type without ever making errors, so why not use those large =Shift= keys. Tapping =LShift= will output ~[~ and tapping =RShift= will output ~]~.
 
-** AppSwitcher
+** =AppSwitcher=
 This is secondary application switcher that is bound to ~alt-tab~ for use inside a remote session.
 
 * TODOs
