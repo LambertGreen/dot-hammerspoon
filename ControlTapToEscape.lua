@@ -4,7 +4,7 @@
 --
 -- From: https://gist.github.com/zcmarine/f65182fe26b029900792fa0b59f09d7f
 
-local log = hs.logger.new('CtrlToEscape', 'debug')
+local log = hs.logger.new('CtrlToEscape')
 local send_escape = false
 local prev_modifiers = {}
 local obj = {}
@@ -27,18 +27,27 @@ empty = function(t)
 end
 
 -- Setup a excluded application filter
-exclusion = hs.window.filter.new{
-    'VirtualBox VM',
-    'Screen Sharing',
-    'NoMachine',
-    -- 'NoMachine Monitor',
-    -- 'QuickLookUIService',
-    -- 'ndock',
-    -- 'nxplayer',
-    'Remotix',
-}
+exclusion = hs.window.filter.new({
+    ['VirtualBox VM'] = {activeApplication=true},
+    ['Screen Sharing'] = {activeApplication=true},
+    ['Microsoft Remote Desktop'] = {activeApplication=true},
+    Remotix = {activeApplication=true},
+    NoMachine = {activeApplication=true},
+    default = false
+})
 
-exclusion:setAppFilter('NoMachine', {allowTitles=1})
+-- NoMachine workaround:
+-- Unfortunately due to NoMachine bad app/window behavior we
+-- need to maintain an 'inclusion' filter that is the opposite
+-- of the exlusion filter
+inclusion = hs.window.filter.new({
+    ['VirtualBox VM'] = {activeApplication=false},
+    ['Screen Sharing'] = {activeApplication=false},
+    ['Microsoft Remote Desktop'] = {activeApplication=false},
+    Remotix = {activeApplication=false},
+    NoMachine = {activeApplication=false},
+    default = true
+})
 
 -- On ctrl down check if we should convert to an escape
 ctrl_to_escape_modifier_tap = hs.eventtap.new(
@@ -86,28 +95,58 @@ disable = function()
     log.d("ControlToEscape: disabled")
 end
 
-exclusion:subscribe(hs.window.filter.windowFocused,
-    function()
-        -- if app and app:name() == "NoMachine" then
-        --     log.d(app)
-        --     app = nil
-        -- else
-            app = hs.application.frontmostApplication()
-            log.d(app)
-            disable()
-        -- end
+local activateEvents = {
+  'windowCreated',
+  'windowFocused',
+  'windowOnScreen',
+  'windowVisible',
+  'windowUnhidden',
+  'windowUnminimized'
+}
+
+local deactivateEvents = {
+  'windowDestroyed',
+  'windowUnfocused',
+  'windowNotOnScreen',
+  'windowNotVisible',
+  'windowHidden',
+  'windowMinimized'
+}
+
+local isNoMachineActivated = false
+
+exclusion:subscribe(activateEvents,
+    function(w, appName, event)
+        log.df("Disabling ControlToEscape: %s", appName)
+        if appName == "NoMachine" then
+            isNoMachineActivated = true
+        end
+        disable()
     end)
 
-exclusion:subscribe(hs.window.filter.windowUnfocused,
-    function()
-        -- if app and app:name() == "NoMachine" then
-        --     log.d(app)
-        --     app = nil
-        -- else
-            -- app = hs.application.frontmostApplication()
-            log.d(app)
+exclusion:subscribe(deactivateEvents,
+    function(w, appName, event)
+        if appName == "NoMachine" then
+            log.df("NoMachine workaround: don't enable ControlToEscape")
+        else
+            log.df("Enabling ControlToEscape: %s", appName)
             enable()
-        -- end
+        end
+    end)
+
+-- Workaround for NoMachine:
+-- Ignore event if from NoMachine, and otherwise enable ControlToEscape
+inclusion:subscribe(activateEvents,
+    function(w, appName, event)
+        if appName == "NoMachine" then
+            log.df("NoMachine workaround: ignore event")
+        else
+            if isNoMachineActivated then
+                log.df("NoMachine workaround (%s): enable ControlToEscape", appName)
+                isNoMachineActivated = false
+                enable()
+            end
+        end
     end)
 
 enable()
