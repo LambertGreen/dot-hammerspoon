@@ -4,7 +4,14 @@
 local log = hs.logger.new('AppWatcher')
 
 function applicationWatcherCallback(appName, eventType, appObject)
-    log.i(appName)
+    log.df("ApplicationWatcher: %s, %s, %s", appName, evenType, appObject)
+    if (eventType == hs.application.watcher.activated) then
+        log.df("ApplicationWatcher: Activated: %s, %s, %s", appName, evenType, appObject)
+        if (appName == "Emacs") then
+            -- Bring Emacs to Front
+            hs.osascript.applescript('tell application "Emacs" to activate')
+        end
+    end
 end
 
 
