@@ -13,7 +13,9 @@ require('ConfigWatcher')
 -- TODO Add keybinding in HyperMode for ShowKeys functionality
 require('ShowKeys')
 require('AppWatcher')
-require('AppSwitcher')
+
+-- Disable the ~Alt+Tab~ switcher as we want to keep the key combo for remote desktop
+-- require('AppSwitcher')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")
