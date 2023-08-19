@@ -37,5 +37,5 @@ Brackets are hard to type without ever making errors, so why not use those large
 ** =AppSwitcher=
 This is secondary application switcher that is bound to ~alt-tab~ for use inside a remote session.
 
-* TODOs
+* TODOs [0/1]
 ** TODO Update README with sections for other scripts
