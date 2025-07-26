@@ -12,6 +12,8 @@ require('ConfigWatcher')
 -- TODO Add keybinding in HyperMode for ShowKeys functionality
 require('ShowKeys')
 require('AppWatcher')
+require('SafeQuit')
+
 
 -- Disable the ~Alt+Tab~ switcher as we want to keep the key combo for remote desktop
 -- require('AppSwitcher')
