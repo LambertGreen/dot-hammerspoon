@@ -7,7 +7,6 @@ hs.logger.defaultLogLevel = "info"
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 
-controlToEscape = require('ControlTapToEscape')
 require('HyperMode')
 require('ConfigWatcher')
 -- TODO Add keybinding in HyperMode for ShowKeys functionality
@@ -16,6 +15,10 @@ require('AppWatcher')
 
 -- Disable the ~Alt+Tab~ switcher as we want to keep the key combo for remote desktop
 -- require('AppSwitcher')
+
+-- Disable the `ControlTapToEscape` because it impact Remote Desktop and we
+-- now have a Dygma keyboard that handles this natively
+-- controlToEscape = require('ControlTapToEscape')
 
 -- Alert whenever this config is loaded.
 hs.alert.show("Hammerspoon: config loaded")

@@ -47,6 +47,6 @@ hyper[key("q", "kill app")] = app.appKill9
 hyper[key("p", "move mouse")] = mouse.movePointerToOtherScreen
 hyper[key("c", "console")] = hsConsole
 hyper[key("m", "mission-control")] = missionControl
-hyper[key("t", "toggle-control-to-escape")] = controlToEscape.toggle
+-- hyper[key("t", "toggle-control-to-escape")] = controlToEscape.toggle
 
 hs.hotkey.bind(hyperMod, hyperKey, spoon.RecursiveBinder.recursiveBind(hyper))
