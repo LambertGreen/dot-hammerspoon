@@ -68,8 +68,10 @@ end
 obj.toggle = function()
     if is_enabled then
         disable()
+        hs.alert.show("Control-to-Escape: Disabled")
     else
         enable()
+        hs.alert.show("Control-to-Escape: Enabled")
     end
 end
 
@@ -164,7 +166,7 @@ exclusionFilter:subscribe(activateEvents, on_exclusion_activated)
 exclusionFilter:subscribe(deactivateEvents, on_exclusion_deactivated)
 inclusionFilter:subscribe(activateEvents, on_inclusion_activated)
 
--- Enable by default
-enable()
+-- Start disabled by default (can be toggled with keybind)
+-- enable()
 
 return obj
