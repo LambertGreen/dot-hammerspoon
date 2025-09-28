@@ -3,6 +3,9 @@
 -- Set the global log level
 hs.logger.defaultLogLevel = "info"
 
+-- Enable IPC for CLI access
+hs.ipc.cliInstall()
+
 -- Install Spoons with SpoonInstall
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
@@ -16,6 +19,7 @@ require('ConfigWatcher')
 require('ShowKeys')
 require('AppWatcher')
 require('SafeQuit')
+require('hide-covered-windows')
 
 
 -- Disable the ~Alt+Tab~ switcher as we want to keep the key combo for remote desktop

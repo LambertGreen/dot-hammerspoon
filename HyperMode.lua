@@ -9,6 +9,7 @@ local wm = require('WindowManagement')
 local mouse = require('MousePointer')
 local app = require('Application')
 local mc = require('MissionControl')
+local hideCovered = require('hide-covered-windows')
 
 local hyperMod = {'ctrl', 'command'}
 local hyperKey = 'Space'
@@ -24,6 +25,7 @@ windowMove[key("n", "bottom-left")] = wm.moveWindowBottomLeft
 windowMove[key("m", "bottom-right")] = wm.moveWindowBottomRight
 windowMove[key("d", "center")] = wm.moveWindowCenter
 windowMove[key("f", "maximize")] = wm.moveWindowMaximize
+windowMove[key("o", "hide-covered")] = hideCovered.hideCoveredWindows
 
 hsConsole = {}
 hsConsole[key("o", "open")] = hs.openConsole
