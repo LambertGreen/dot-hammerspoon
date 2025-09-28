@@ -31,6 +31,7 @@ hsConsole = {}
 hsConsole[key("o", "open")] = hs.openConsole
 hsConsole[key("c", "close")] = hs.closeConsole
 hsConsole[key("t", "toggle OnTop")] = function() hs.consoleOnTop(not hs.consoleOnTop()) end
+hsConsole[key("r", "reload config")] = hs.reload
 
 missionControl = {}
 missionControl[key("n", "toggle-notifications")] = mc.toggleNotificationCenter
