@@ -8,6 +8,7 @@ local log = hs.logger.new('CtrlToEscape')
 local send_escape = false
 local prev_modifiers = {}
 local is_enabled = false
+local manually_disabled = false  -- Track if user manually disabled (vs auto-disabled by filters)
 local obj = {}
 
 len = function(t)
@@ -26,6 +27,11 @@ empty = function(t)
 end
 
 on_control_down = function(evt)
+    -- Only process if enabled
+    if not is_enabled then
+        return false
+    end
+
     -- On ctrl down check if we should convert to an escape
     local curr_modifiers = evt:getFlags()
 
@@ -45,32 +51,49 @@ on_control_down = function(evt)
 end
 
 on_non_modifier_down = function(evt)
+    -- Only process if enabled
+    if not is_enabled then
+        return false
+    end
+
     -- If any non-modifier key is pressed, we know we won't be sending an escape
     send_escape = false
     return false
 end
 
-enable = function()
-    ctrl_to_escape_modifier_tap:start()
-    ctrl_to_escape_non_modifier_tap:start()
-    is_enabled = true
-    log.d("ControlToEscape: enabled")
+enable = function(force)
+    -- Only enable if not manually disabled, unless forced
+    if manually_disabled and not force then
+        log.d("ControlToEscape: skipping enable (manually disabled)")
+        return
+    end
+
+    if not is_enabled then
+        ctrl_to_escape_modifier_tap:start()
+        ctrl_to_escape_non_modifier_tap:start()
+        is_enabled = true
+        manually_disabled = false
+        log.d("ControlToEscape: enabled")
+    end
 end
 
-disable = function()
+disable = function(manual)
     ctrl_to_escape_modifier_tap:stop()
     ctrl_to_escape_non_modifier_tap:stop()
     is_enabled = false
     send_escape = false
-    log.d("ControlToEscape: disabled")
+    if manual then
+        manually_disabled = true
+    end
+    log.d("ControlToEscape: disabled" .. (manual and " (manual)" or ""))
 end
 
 obj.toggle = function()
     if is_enabled then
-        disable()
+        disable(true)  -- Manual disable
         hs.alert.show("Control-to-Escape: Disabled")
     else
-        enable()
+        enable(true)  -- Force enable (overrides manual disable)
         hs.alert.show("Control-to-Escape: Enabled")
     end
 end
@@ -118,7 +141,7 @@ on_exclusion_activated = function(w, appName, event)
     if appName == "NoMachine" then
         isNoMachineActivated = true
     end
-    disable()
+    disable(false)  -- Auto-disable (not manual)
 end
 
 on_exclusion_deactivated = function(w, appName, event)
@@ -126,7 +149,7 @@ on_exclusion_deactivated = function(w, appName, event)
         log.df("NoMachine workaround: don't enable ControlToEscape")
     else
         log.df("Enabling ControlToEscape: %s", appName)
-        enable()
+        enable(false)  -- Auto-enable (won't override manual disable)
     end
 end
 
@@ -139,7 +162,7 @@ on_inclusion_activated = function(w, appName, event)
         if isNoMachineActivated then
             log.df("NoMachine workaround (%s): enable ControlToEscape", appName)
             isNoMachineActivated = false
-            enable()
+            enable(false)  -- Auto-enable (won't override manual disable)
         end
     end
 end
