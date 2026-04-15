@@ -21,6 +21,7 @@ require('AppWatcher')
 require('SafeQuit')
 require('hide-covered-windows')
 require('WindowDragging')
+require('ShiftBackspaceToAltBackspace')
 
 -- Disable the ~Alt+Tab~ switcher as we want to keep the key combo for remote desktop
 -- require('AppSwitcher')
